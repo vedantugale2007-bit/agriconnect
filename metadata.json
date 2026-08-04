@@ -1,0 +1,6 @@
+{
+  "name": "AgriConnect",
+  "description": "AI-powered intelligent agricultural logistics, fleet tracking & stewardship platform.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
