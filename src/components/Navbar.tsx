@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { ScreenType, UserRole, Language } from '../types';
 import { useLanguage } from '../context/LanguageContext';
+import { useAssistant } from '../context/AssistantContext';
 import { LANGUAGE_LABELS } from '../utils/translations';
 
 interface NavbarProps {
@@ -36,7 +37,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   setUserRole,
   activeShipmentsCount,
 }) => {
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage, t, tr } = useLanguage();
+  const { openAssistant } = useAssistant();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
@@ -45,21 +47,21 @@ export const Navbar: React.FC<NavbarProps> = ({
   const notifications = [
     {
       id: 1,
-      title: language === 'mr' ? 'वाहतूक #AC-8842 सिन्नर → लासलगाव' : language === 'hi' ? 'परिवहन #AC-8842 सिन्नर → लासलगांव' : 'Shipment #AC-8842 In-Transit',
-      time: language === 'mr' ? '५ मिनिटांपूर्वी' : language === 'hi' ? '5 मिनट पहले' : '5 mins ago',
-      text: language === 'mr' ? 'चालक ज्ञानेश्वर शिंदे: तापमान २२.५° से. वर नियंत्रित.' : language === 'hi' ? 'चालक ज्ञानेश्वर शिंदे: तापमान 22.5°C नियंत्रित।' : 'Driver Dnyaneshwar Shinde updated temperature to 22.5°C.',
+      title: tr({ mr: 'वाहतूक #AC-8842 मार्गस्थ', hi: 'शिपमेंट #AC-8842 रास्ते में', en: 'Shipment #AC-8842 In-Transit' }),
+      time: tr({ mr: '५ मिनिटांपूर्वी', hi: '5 मिनट पहले', en: '5 mins ago' }),
+      text: tr({ mr: 'चालक ज्ञानेश्वर शिंदे यांनी तापमान २२.५°C वर अपडेट केले.', hi: 'चालक ज्ञानेश्वर शिंदे ने तापमान 22.5°C पर अपडेट किया।', en: 'Driver Dnyaneshwar Shinde updated temperature to 22.5°C.' }),
     },
     {
       id: 2,
-      title: language === 'mr' ? 'लासलगाव APMC बाजार भाव अपडेट' : language === 'hi' ? 'लासलगांव मंडी भाव अपडेट' : 'Mandi Price Alert',
-      time: language === 'mr' ? '२० मिनिटांपूर्वी' : language === 'hi' ? '20 मिनट पहले' : '20 mins ago',
-      text: language === 'mr' ? 'कांदा दर ₹ २,८०० / क्विंटल (+२.८% वाढ).' : language === 'hi' ? 'प्याज दर ₹ 2,800 / क्विंटल (+2.8% वृद्धि)।' : 'Onion rate +2.8% at Lasalgaon APMC (₹2,800/Q).',
+      title: tr({ mr: 'लासलगाव एपीएमसी भाव अपडेट', hi: 'लासलगांव मंडी भाव अपडेट', en: 'Mandi Price Alert' }),
+      time: tr({ mr: '२० मिनिटांपूर्वी', hi: '20 मिनट पहले', en: '20 mins ago' }),
+      text: tr({ mr: 'लासलगाव एपीएमसीत कांदा दर +२.८% (₹ २,८०० / क्विंटल).', hi: 'लासलगांव एपीएमसी में प्याज दर +2.8% (₹ 2,800 / क्विंटल)।', en: 'Onion rate +2.8% at Lasalgaon APMC (₹2,800/Quintal).' }),
     },
     {
       id: 3,
-      title: language === 'mr' ? 'वाहतूक बुकिंग स्वीकारले' : language === 'hi' ? 'वाहन बुकिंग स्वीकृत' : 'Load Request Accepted',
-      time: language === 'mr' ? '१ तासापूर्वी' : language === 'hi' ? '1 घंटे पहले' : '1 hour ago',
-      text: language === 'mr' ? 'जय महाराष्ट्र कोल्ड ट्रान्सपोर्टने १० टन कांदा वाहतूक निश्चित केली.' : language === 'hi' ? 'जय महाराष्ट्र कोल्ड ट्रांसपोर्ट ने 10 टन प्याज परिवहन कंफर्म किया।' : 'Jai Maharashtra Cold Transport confirmed pickup for 10T Onion.',
+      title: tr({ mr: 'वाहतूक विनंती स्वीकारली', hi: 'लोड अनुरोध स्वीकृत', en: 'Load Request Accepted' }),
+      time: tr({ mr: '१ तासापूर्वी', hi: '1 घंटे पहले', en: '1 hour ago' }),
+      text: tr({ mr: 'जय महाराष्ट्र कोल्ड ट्रान्सपोर्टने १० टन कांदा पिकअप निश्चित केला.', hi: 'जय महाराष्ट्र कोल्ड ट्रांसपोर्ट ने 10 टन प्याज पिकअप कन्फर्म किया।', en: 'Jai Maharashtra Cold Transport confirmed pickup for 10T Onion.' }),
     },
   ];
 
@@ -90,7 +92,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="flex items-center space-x-1.5">
                 <span className="font-extrabold text-xl tracking-tight text-white font-display">AgriConnect</span>
                 <span className="hidden sm:inline-block px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full">
-                  महाराष्ट्र
+                  {t('brandRegion')}
                 </span>
               </div>
               <p className="text-[10px] text-emerald-300/70 font-medium hidden sm:block">{t('tagline')}</p>
@@ -168,12 +170,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <button
-              onClick={() => setCurrentScreen('ai-assistant')}
-              className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-sm ${
-                currentScreen === 'ai-assistant'
-                  ? 'bg-gradient-to-r from-emerald-500 to-teal-400 text-emerald-950 font-extrabold shadow-emerald-500/20'
-                  : 'bg-emerald-900/80 text-emerald-200 border border-emerald-700/60 hover:bg-emerald-800'
-              }`}
+              onClick={openAssistant}
+              className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-sm bg-emerald-900/80 text-emerald-200 border border-emerald-700/60 hover:bg-emerald-800"
             >
               <Bot className="w-4 h-4 text-emerald-300" />
               <span>{t('aiAssistant')}</span>
@@ -377,7 +375,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {t('invoices')}
           </button>
           <button
-            onClick={() => { setCurrentScreen('ai-assistant'); setMobileMenuOpen(false); }}
+            onClick={() => { openAssistant(); setMobileMenuOpen(false); }}
             className="w-full text-left px-3 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-500 to-teal-400 text-emerald-950"
           >
             {t('aiAssistant')}

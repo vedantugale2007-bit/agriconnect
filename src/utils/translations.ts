@@ -16,11 +16,13 @@ export const CROP_TRANSLATIONS: Record<string, Record<Language, string>> = {
   Soybean: { mr: 'सोयाबीन', hi: 'सोयाबीन', en: 'Soybean' },
   Wheat: { mr: 'गहू', hi: 'गेहूं', en: 'Wheat' },
   Maize: { mr: 'मका', hi: 'मक्का', en: 'Maize' },
+  'Fresh Tomatoes': { mr: 'ताजे टोमॅटो', hi: 'ताजे टमाटर', en: 'Fresh Tomatoes' },
+  'Export Grapes': { mr: 'निर्यात द्राक्षे', hi: 'निर्यात अंगूर', en: 'Export Grapes' },
 };
 
 // Vehicle translations mapping
 export const VEHICLE_TRANSLATIONS: Record<string, Record<Language, string>> = {
-  'Tata Ace Gold': { mr: 'टाटा एस गोल्ड', hi: 'टाटा एएस गोल्ड', en: 'Tata Ace Gold' },
+  'Tata Ace Gold': { mr: 'टाटा एस गोल्ड', hi: 'टाटा एस गोल्ड', en: 'Tata Ace Gold' },
   'Mahindra Bolero Pickup': { mr: 'महिंद्रा बोलेरो पिकअप', hi: 'महिंद्रा बोलेरो पिकअप', en: 'Mahindra Bolero Pickup' },
   'Mahindra Jeeto': { mr: 'महिंद्रा जितो', hi: 'महिंद्रा जीतो', en: 'Mahindra Jeeto' },
   'Ashok Leyland Dost': { mr: 'अशोक लेलँड दोस्त', hi: 'अशोक लेलैंड दोस्त', en: 'Ashok Leyland Dost' },
@@ -31,22 +33,29 @@ export const VEHICLE_TRANSLATIONS: Record<string, Record<Language, string>> = {
 
 // APMC Market translations
 export const MARKET_TRANSLATIONS: Record<string, Record<Language, string>> = {
-  'Lasalgaon APMC': { mr: 'लासलगाव कृषी उत्पन्न बाजार समिती', hi: 'लासलगांव एपीएमसी', en: 'Lasalgaon APMC' },
+  'Lasalgaon APMC': { mr: 'लासलगाव एपीएमसी', hi: 'लासलगांव एपीएमसी', en: 'Lasalgaon APMC' },
   'Nashik APMC': { mr: 'नाशिक एपीएमसी', hi: 'नासिक एपीएमसी', en: 'Nashik APMC' },
   'Pimpalgaon Baswant APMC': { mr: 'पिंपळगाव बसवंत एपीएमसी', hi: 'पिंपलगांव बसवंत एपीएमसी', en: 'Pimpalgaon Baswant APMC' },
-  'Ahilyanagar Market': { mr: 'अहिल्यानगर कृषी बाजार', hi: 'अहिल्यानगर मंडी', en: 'Ahilyanagar Market' },
+  'Ahilyanagar Market': { mr: 'अहिल्यानगर बाजार', hi: 'अहिल्यानगर मंडी', en: 'Ahilyanagar Market' },
   'Pune Market Yard': { mr: 'पुणे मार्केट यार्ड', hi: 'पुणे मार्केट यार्ड', en: 'Pune Market Yard' },
   'Sangamner Market': { mr: 'संगमनेर बाजार', hi: 'संगमनेर मंडी', en: 'Sangamner Market' },
-  'Kopargaon Market': { mr: 'कोपरगाव बाजार समिती', hi: 'कोपरगांव मंडी', en: 'Kopargaon Market' },
-  'Rahuri Market': { mr: 'राहुरी कृषी उत्पन्न बाजार', hi: 'राहुरी मंडी', en: 'Rahuri Market' },
-  'Yeola Market': { mr: 'येवला बाजार समिती', hi: 'येवला मंडी', en: 'Yeola Market' },
+  'Kopargaon Market': { mr: 'कोपरगाव बाजार', hi: 'कोपरगांव मंडी', en: 'Kopargaon Market' },
+  'Rahuri Market': { mr: 'राहुरी बाजार', hi: 'राहुरी मंडी', en: 'Rahuri Market' },
+  'Yeola Market': { mr: 'येवला बाजार', hi: 'येवला मंडी', en: 'Yeola Market' },
+};
+
+// Region / district translations
+export const REGION_TRANSLATIONS: Record<string, Record<Language, string>> = {
+  'Nashik District': { mr: 'नाशिक जिल्हा', hi: 'नासिक जिला', en: 'Nashik District' },
+  'Ahilyanagar District': { mr: 'अहिल्यानगर जिल्हा', hi: 'अहिल्यानगर जिला', en: 'Ahilyanagar District' },
 };
 
 // UI Text Translation Dictionaries
 const UI_STRINGS: Record<string, Record<Language, string>> = {
   // Navigation & General
   appName: { mr: 'ॲग्रीकनेक्ट महाराष्ट्र', hi: 'एग्रीकनेक्ट महाराष्ट्र', en: 'AgriConnect Maharashtra' },
-  tagline: { mr: 'बुद्धिमत्तापूर्ण कृषी लॉजिस्टिक्स व शीतगृह साखळी', hi: 'स्मार्ट कृषि लॉजिस्टिक्स एवं कोल्ड-चेन नेटवर्क', en: 'Intelligent Agricultural Logistics & Cold-Chain Network' },
+  brandRegion: { mr: 'महाराष्ट्र', hi: 'महाराष्ट्र', en: 'Maharashtra' },
+  tagline: { mr: 'बुद्धिमान कृषी लॉजिस्टिक्स व शीतगृह साखळी', hi: 'स्मार्ट कृषि लॉजिस्टिक्स एवं कोल्ड-चेन नेटवर्क', en: 'Intelligent Agricultural Logistics & Cold-Chain Network' },
   home: { mr: 'मुख्य पृष्ठ', hi: 'होम', en: 'Home' },
   dashboard: { mr: 'डॅशबोर्ड', hi: 'डैशबोर्ड', en: 'Dashboard' },
   findTransporters: { mr: 'वाहतूकदार शोधा', hi: 'ट्रांसपोर्टर खोजें', en: 'Find Transporters' },
@@ -54,7 +63,7 @@ const UI_STRINGS: Record<string, Record<Language, string>> = {
   invoices: { mr: 'जीएसटी बिले', hi: 'जीएसटी बिल', en: 'Invoices' },
   aiAssistant: { mr: 'कृषी एआय सहाय्यक', hi: 'कृषि एआई सहायक', en: 'Agri AI Assistant' },
   alerts: { mr: 'सूचना व अपडेट्स', hi: 'अधिसूचनाएं एवं अपडेट', en: 'Alerts & Updates' },
-  markAllRead: { mr: 'सर्व वाचलेले दाखवा', hi: 'सभी पढ़ा हुआ चिन्हित करें', en: 'Mark all read' },
+  markAllRead: { mr: 'सर्व वाचले म्हणून दाखवा', hi: 'सभी पढ़ा हुआ चिह्नित करें', en: 'Mark all read' },
   switchRole: { mr: 'भूमिका बदला', hi: 'रोल बदलें', en: 'Switch Perspective' },
   farmerPortal: { mr: 'शेतकरी पोर्टल', hi: 'किसान पोर्टल', en: 'Farmer Portal' },
   transporterHub: { mr: 'वाहतूकदार केंद्र', hi: 'ट्रांसपोर्टर हब', en: 'Transporter Hub' },
@@ -63,64 +72,67 @@ const UI_STRINGS: Record<string, Record<Language, string>> = {
   transporterView: { mr: 'वाहतूकदार दृश्य', hi: 'ट्रांसपोर्टर दृश्य', en: 'Transporter View' },
   adminView: { mr: 'प्रशासक दृश्य', hi: 'एडमिन दृश्य', en: 'Admin View' },
   languageSelect: { mr: 'भाषा निवडा', hi: 'भाषा चुनें', en: 'Language' },
+  notifications: { mr: 'सूचना', hi: 'सूचनाएं', en: 'Notifications' },
+
+  // Shared field labels
+  cropType: { mr: 'पिकाचा प्रकार', hi: 'फसल का प्रकार', en: 'Crop Type' },
+  weightKg: { mr: 'वजन', hi: 'वजन', en: 'Weight' },
+  vehicleRequired: { mr: 'आवश्यक वाहन', hi: 'आवश्यक वाहन', en: 'Vehicle Required' },
+  pickupLocation: { mr: 'पिकअप ठिकाण', hi: 'पिकअप स्थान', en: 'Pickup Location' },
+  destinationLocation: { mr: 'गंतव्य ठिकाण', hi: 'गंतव्य स्थान', en: 'Destination' },
+  totalPayable: { mr: 'एकूण देय रक्कम', hi: 'कुल देय राशि', en: 'Total Payable' },
+  inTransit: { mr: 'मार्गस्थ', hi: 'रास्ते में', en: 'In-Transit' },
+  callDriver: { mr: 'चालकाला कॉल करा', hi: 'चालक को कॉल करें', en: 'Call Driver' },
+  ton: { mr: 'टन', hi: 'टन', en: 'Tons' },
+  kg: { mr: 'किग्रा', hi: 'किग्रा', en: 'Kg' },
+  km: { mr: 'किमी', hi: 'किमी', en: 'Km' },
+  quintal: { mr: 'क्विंटल', hi: 'क्विंटल', en: 'Quintal' },
 
   // Hero Section
-  heroTitle1: { mr: 'महाराष्ट्रातील शेतकरी व वाहतूकदारांसाठी', hi: 'महाराष्ट्र के किसानों एवं ट्रांसपोर्टरों के लिए', en: 'Smart Agricultural Logistics For' },
-  heroTitle2: { mr: 'स्मार्ट व सुरक्षित कृषी वाहतूक', hi: 'स्मार्ट एवं सुरक्षित कृषि परिवहन', en: 'Maharashtra Farmers & Transporters' },
-  heroSub: { mr: 'नाशिक व अहिल्यानगर जिल्ह्यातील शेतकऱ्यांसाठी लासलगाव, पिंपळगाव आणि मुंबई-पुणे बाजारासाठी थेट वाहतूक बुकिंग, एआय नुकसान अंदाज आणि एपीएमसी बाजार भाव.', hi: 'नासिक और अहिल्यानगर जिलों से लासलगांव, पिंपलगांव और पुणे-मुंबई मंडियों के लिए सीधी वाहन बुकिंग, एआई नुकसान अनुमान और एपीएमसी मंडी भाव।', en: 'Direct refrigerated & open truck booking from Nashik & Ahilyanagar to Lasalgaon, Pune, & Mumbai APMCs with Gemini AI crop loss prediction.' },
-  startShipping: { mr: 'वाहतूक बुक करा', hi: 'वाहन बुक करें', en: 'Start Shipping Crop' },
-  viewMandiRates: { mr: 'एपीएमसी बाजार भाव पहा', hi: 'एपीएमसी मंडी भाव देखें', en: 'View Mandi Rates' },
-  askAiAssistant: { mr: 'एआय मित्रास विचारा', hi: 'एआई सहायक से पूछें', en: 'Ask AI Assistant' },
-
-  // Home Trust Stats
-  metric1Val: { mr: '५०,०००+ टन', hi: '50,000+ टन', en: '50,000+ Tons' },
-  metric1Lbl: { mr: 'माल वाहतूक पूर्ण', hi: 'फसल परिवहन संपन्न', en: 'Produce Transported' },
-  metric2Val: { mr: '९९.६%', hi: '99.6%', en: '99.6%' },
-  metric2Lbl: { mr: 'वेळेवर पोहोचणारी वाहतूक', hi: 'समय पर डिलीवरी', en: 'On-Time Delivery' },
-  metric3Val: { mr: '₹ २.८ कोटी+', hi: '₹ 2.8 करोड़+', en: '₹ 2.8 Cr+' },
-  metric3Lbl: { mr: 'शेतकऱ्यांची बचत', hi: 'किसानों की कुल बचत', en: 'Farmer Savings' },
+  heroBadge: { mr: 'महाराष्ट्र कृषी व वाहतूक डिजिटल नेटवर्क', hi: 'महाराष्ट्र कृषि एवं परिवहन डिजिटल नेटवर्क', en: 'Maharashtra Agri Logistics Network' },
+  heroTitleLead: { mr: 'महाराष्ट्रातील शेतकऱ्यांसाठी', hi: 'महाराष्ट्र के किसानों के लिए', en: 'Intelligent Supply Chain For' },
+  heroTitleAccent: { mr: 'स्मार्ट कृषी वाहतूक यंत्रणा', hi: 'स्मार्ट कृषि परिवहन प्रणाली', en: 'Maharashtra Farmers & Transporters' },
+  heroSub: { mr: 'नाशिक व अहिल्यानगर जिल्ह्यातील प्रमाणित वाहतूकदारांशी थेट जोडा, जेमिनी एआय द्वारे पिकांचे नुकसान टाळा आणि लासलगाव एपीएमसीसह सर्व प्रमुख बाजारांचे थेट भाव एकाच ठिकाणी मिळवा.', hi: 'नासिक और अहिल्यानगर जिले के प्रमाणित ट्रांसपोर्टरों से सीधे जुड़ें, जेमिनी एआई से फसल नुकसान से बचें और लासलगांव एपीएमसी सहित सभी प्रमुख मंडियों के लाइव भाव एक ही जगह पाएं।', en: 'Connect directly with certified Maharashtra transporters, eliminate crop spoilage with real-time Gemini AI risk analysis, and access live APMC Mandi rates in one dashboard.' },
+  bookTransport: { mr: 'वाहन बुक करा', hi: 'वाहन बुक करें', en: 'Start Shipping Crop' },
+  viewMandiPrices: { mr: 'एपीएमसी बाजार भाव पहा', hi: 'एपीएमसी मंडी भाव देखें', en: 'View Mandi Rates' },
+  askAiAssistant: { mr: 'एआय सहाय्यकास विचारा', hi: 'एआई सहायक से पूछें', en: 'Ask AI Assistant' },
 
   // Farmer Dashboard
-  farmerDashboardTitle: { mr: 'शेतकरी कमांड सेंटर', hi: 'किसान कमांड सेंटर', en: 'Farmer Command Center' },
-  farmerWelcome: { mr: 'नमस्कार, शंकर पाटील (नाशिक)', hi: 'नमस्ते, शंकर पाटिल (नासिक)', en: 'Welcome back, Shankar Patil (Nashik)' },
-  postNewLoad: { mr: 'नवीन माल वाहतूक नोंदवा', hi: 'नई फसल बुकिंग दर्ज करें', en: 'Post New Crop Load' },
-  selectCrop: { mr: 'पिकाचा प्रकार निवडा', hi: 'फसल का प्रकार चुनें', en: 'Select Crop Type' },
-  weightInKg: { mr: 'वजन (किलोग्राम / टन)', hi: 'वजन (किलोग्राम / टन)', en: 'Weight (Kg / Tons)' },
-  pickupAddress: { mr: 'पिकअप ठिकाण (शेत/गाव)', hi: 'पिकअप स्थान (खेत/गांव)', en: 'Pickup Location (Farm/Village)' },
-  deliveryMarket: { mr: 'गंतव्य एपीएमसी / बाजार समिती', hi: 'गंतव्य एपीएमसी / मंडी', en: 'Destination APMC Market' },
-  calculateLossRisk: { mr: 'एआय द्वारे नुकसान अंदाज काढा', hi: 'एआई फसल नुकसान जोखिम जांचें', en: 'Predict Crop Loss Risk (Gemini AI)' },
-  mandiPricesHeading: { mr: 'महाराष्ट्रातील प्रमुख एपीएमसी बाजार भाव', hi: 'महाराष्ट्र प्रमुख एपीएमसी मंडी भाव', en: 'Maharashtra Live APMC Mandi Rates' },
-  activeBookings: { mr: 'तुमच्या सक्रिय वाहतूक बुकिंग्स', hi: 'आपकी सक्रिय परिवहन बुकिंग', en: 'Your Active Shipment Bookings' },
+  farmerDashboardSub: { mr: 'सिन्नर-निफाड कृषी पट्टा, नाशिक जिल्हा', hi: 'सिन्नर-निफाड कृषि क्षेत्र, नासिक जिला', en: 'Sinnar-Niphad Agri Belt, Nashik District' },
+  postNewLoad: { mr: 'नवीन माल नोंदवा', hi: 'नई फसल दर्ज करें', en: 'Post New Crop Load' },
+  searchTransporters: { mr: 'वाहतूकदार शोधा', hi: 'ट्रांसपोर्टर खोजें', en: 'Find Transporters' },
+  totalBookings: { mr: 'एकूण बुकिंग्स', hi: 'कुल बुकिंग', en: 'Total Bookings' },
+  activeShipments: { mr: 'सक्रिय वाहतूक', hi: 'सक्रिय शिपमेंट', en: 'Active Shipments' },
+  savedCropLoss: { mr: 'वाचवलेले नुकसान', hi: 'बचाया गया नुकसान', en: 'Saved Crop Loss' },
+  apmcMandis: { mr: 'बाजार समित्या', hi: 'एपीएमसी मंडियां', en: 'APMC Mandis' },
+  mandiPrices: { mr: 'थेट एपीएमसी बाजार भाव', hi: 'लाइव एपीएमसी मंडी भाव', en: 'Live APMC Mandi Rates' },
+  mandiSubtitle: { mr: 'नाशिक व अहिल्यानगर मधील प्रमुख बाजार समित्या', hi: 'नासिक व अहिल्यानगर की प्रमुख मंडियां', en: 'Major APMC markets in Nashik & Ahilyanagar' },
+  liveSync: { mr: 'थेट अपडेट', hi: 'लाइव सिंक', en: 'Live Sync' },
+  lossEstimator: { mr: 'एआय पीक नुकसान अंदाज', hi: 'एआई फसल नुकसान अनुमान', en: 'AI Crop Loss Estimator' },
+  geminiPowered: { mr: 'जेमिनी एआय द्वारे संचालित', hi: 'जेमिनी एआई द्वारा संचालित', en: 'Powered by Gemini AI' },
+  calculateRisk: { mr: 'नुकसान धोका मोजा', hi: 'नुकसान जोखिम जांचें', en: 'Predict Loss Risk' },
+  spoilageRisk: { mr: 'खराब होण्याचा धोका', hi: 'खराब होने का जोखिम', en: 'Spoilage Risk' },
+  analyzing: { mr: 'विश्लेषण सुरू आहे...', hi: 'विश्लेषण जारी है...', en: 'Analyzing...' },
 
   // Transporter Dashboard
-  transporterDashboardTitle: { mr: 'वाहतूकदार हब', hi: 'ट्रांसपोर्टर हब', en: 'Transporter Fleet Hub' },
-  transporterWelcome: { mr: 'सह्याद्री किसान लॉजिस्टिक्स (नाशिक)', hi: 'सह्याद्रि किसान लॉजिस्टिक्स (नासिक)', en: 'Sahyadri Kisan Logistics (Nashik Fleet)' },
-  availableLoads: { mr: 'उपलब्ध शेतकरी माल मागणी', hi: 'उपलब्ध किसान फसल लोड', en: 'Available Farmer Crop Loads' },
-  acceptLoad: { mr: 'वाहतूक स्वीकारा', hi: 'बुकिंग स्वीकारें', en: 'Accept & Lock Freight' },
-  fleetStatus: { mr: 'गाड्यांची स्थिती', hi: 'वाहनों की स्थिति', en: 'Fleet Vehicle Status' },
+  transporterDashboard: { mr: 'वाहतूकदार फ्लीट हब', hi: 'ट्रांसपोर्टर फ्लीट हब', en: 'Transporter Fleet Hub' },
+  transporterSub: { mr: 'जय महाराष्ट्र लॉजिस्टिक्स • नोंदणी क्र. MH-15-2024', hi: 'जय महाराष्ट्र लॉजिस्टिक्स • पंजीकरण क्र. MH-15-2024', en: 'Jai Maharashtra Logistics • Reg. No. MH-15-2024' },
+  totalEarnings: { mr: 'एकूण कमाई', hi: 'कुल कमाई', en: 'Total Earnings' },
 
   // Admin Dashboard
-  adminDashboardTitle: { mr: 'प्रशासकीय नियंत्रण कक्ष', hi: 'प्रशासनिक नियंत्रण कक्ष', en: 'Admin Verification Command Center' },
-  verifiedFarmers: { mr: 'प्रमाणित शेतकरी', hi: 'सत्यापित किसान', en: 'Verified Farmers' },
-  verifiedTransporters: { mr: 'प्रमाणित वाहतूकदार', hi: 'सत्यापित ट्रांसपोर्टर', en: 'Verified Transporters' },
-  totalVolumeMoved: { mr: 'एकूण वाहतूक केलेले धान्य/फळे', hi: 'कुल कुल परिवहन मात्रा', en: 'Total Cargo Moved' },
+  adminDashboard: { mr: 'प्रशासकीय पडताळणी नियंत्रण कक्ष', hi: 'प्रशासनिक सत्यापन नियंत्रण कक्ष', en: 'Admin Verification Command Center' },
+  adminSub: { mr: 'महाराष्ट्र राज्य कृषी लॉजिस्टिक्स नियंत्रण कक्ष (नाशिक व अहिल्यानगर)', hi: 'महाराष्ट्र राज्य कृषि लॉजिस्टिक्स नियंत्रण कक्ष (नासिक व अहिल्यानगर)', en: 'Maharashtra State Agri Logistics Control (Nashik & Ahilyanagar)' },
 
-  // Find Transporters Screen
-  searchTransportersTitle: { mr: 'महाराष्ट्रातील विश्वासू वाहतूकदार शोधा', hi: 'महाराष्ट्र के विश्वसनीय ट्रांसपोर्टर खोजें', en: 'Find Trusted Transporters in Maharashtra' },
-  filterByVehicle: { mr: 'वाहनानुसार फिल्टर करा', hi: 'वाहन प्रकार से फ़िल्टर करें', en: 'Filter by Vehicle' },
-  perTonKm: { mr: 'प्रति टन-किमी दर', hi: 'प्रति टन-किमी दर', en: 'Rate per Ton-Km' },
-  bookNow: { mr: 'आत्ताच बुक करा', hi: 'अभी बुक करें', en: 'Book Transport Now' },
+  // Reset / misc
+  reset: { mr: 'रीसेट', hi: 'रीसेट', en: 'Reset' },
+};
 
-  // Checkout & Invoice
-  checkoutTitle: { mr: 'सुरक्षित पेमेंट व बुकिंग पुष्टीकरण', hi: 'सुरक्षित भुगतान एवं बुकिंग पुष्टि', en: 'Secure Payment & Booking Checkout' },
-  payViaUpi: { mr: 'युपीआय द्वारे पेमेंट करा (PhonePe / GPay / BHIM)', hi: 'यूपीआई द्वारा भुगतान करें (PhonePe / GPay / BHIM)', en: 'Pay via UPI (PhonePe / Google Pay / BHIM)' },
-  gstInvoiceHeading: { mr: 'जीएसटी कर पावती', hi: 'जीएसटी कर चालान', en: 'GST Tax Invoice' },
-  downloadInvoice: { mr: 'बिल डाउनलोड करा (PDF)', hi: 'बिल डाउनलोड करें (PDF)', en: 'Download Invoice (PDF)' },
+const DEVANAGARI_DIGITS = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
 
-  // AI Assistant
-  aiAssistantWelcome: { mr: 'नमस्कार! मी तुमचा कृषी मित्र एआय सहाय्यक आहे.', hi: 'नमस्ते! मैं आपका कृषि मित्र एआई सहायक हूँ।', en: 'Namaste! I am your AgriConnect AI Logistics & Crop Care Assistant.' },
-  aiAssistantPlaceholder: { mr: 'कांदा, द्राक्षे किंवा भाड्याच्या दराविषयी विचारा...', hi: 'प्याज, अंगूर या वाहन भाड़े के बारे में पूछें...', en: 'Ask about crops, APMC prices, or truck rates...' },
-  diagnoseCropPhoto: { mr: 'पिकाचा फोटो अपलोड करून तपासणी करा', hi: 'फसल का फोटो अपलोड करके जांच करें', en: 'Upload Crop Photo for Diagnostics' },
+export const localizeNumber = (value: number | string, lang: Language): string => {
+  const raw = typeof value === 'number' ? value.toLocaleString('en-IN') : String(value);
+  if (lang === 'en') return raw;
+  return raw.replace(/[0-9]/g, (d) => DEVANAGARI_DIGITS[Number(d)]);
 };
 
 export const t = (key: string, lang: Language): string => {
@@ -152,4 +164,11 @@ export const getMarketName = (marketKey: string, lang: Language): string => {
     return MARKET_TRANSLATIONS[marketKey][lang];
   }
   return marketKey;
+};
+
+export const getRegionName = (regionKey: string, lang: Language): string => {
+  if (REGION_TRANSLATIONS[regionKey] && REGION_TRANSLATIONS[regionKey][lang]) {
+    return REGION_TRANSLATIONS[regionKey][lang];
+  }
+  return regionKey;
 };

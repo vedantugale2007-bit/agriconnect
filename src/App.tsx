@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ScreenType, UserRole, Transporter, ShipmentBooking, MandiPrice, Invoice } from './types';
 import { LanguageProvider } from './context/LanguageContext';
+import { AssistantProvider } from './context/AssistantContext';
+import { AIAssistantWidget } from './components/AIAssistantWidget';
 import {
   INITIAL_TRANSPORTERS,
   INITIAL_SHIPMENTS,
@@ -19,7 +21,6 @@ import { CheckoutScreen } from './components/screens/CheckoutScreen';
 import { PaymentSuccessScreen } from './components/screens/PaymentSuccessScreen';
 import { LiveTrackingScreen } from './components/screens/LiveTrackingScreen';
 import { InvoicesScreen } from './components/screens/InvoicesScreen';
-import { AIAssistantScreen } from './components/screens/AIAssistantScreen';
 
 function MainContent() {
   const [currentScreen, setCurrentScreen] = useState<ScreenType>('home');
@@ -100,13 +101,13 @@ function MainContent() {
       transporterAddress: 'Panchavati MIDC, Nashik, MH 422003',
       items: [
         {
-          description: `वाहतूक शुल्क (${(newShipment.weightKg / 1000).toFixed(1)} टन ${newShipment.pickupLocation} ते ${newShipment.destinationLocation})`,
+          description: `Freight charge (${(newShipment.weightKg / 1000).toFixed(1)} T, ${newShipment.pickupLocation} to ${newShipment.destinationLocation})`,
           quantity: newShipment.weightKg / 1000,
           rate: 320,
           amount: newShipment.baseFee,
         },
-        { description: 'पीक वाहतूक सुरक्षा व विमा कवच', quantity: 1, rate: 150, amount: 150 },
-        { description: 'ॲग्रीकनेक्ट डिजिटल सेवा शुल्क', quantity: 1, rate: 100, amount: 100 },
+        { description: 'Crop transit insurance cover', quantity: 1, rate: 150, amount: 150 },
+        { description: 'AgriConnect digital service fee', quantity: 1, rate: 100, amount: 100 },
       ],
       subtotal: newShipment.totalFee,
       taxGst: Math.round(newShipment.totalFee * 0.05),
@@ -205,14 +206,13 @@ function MainContent() {
             invoices={invoices}
           />
         )}
-
-        {currentScreen === 'ai-assistant' && (
-          <AIAssistantScreen setCurrentScreen={setCurrentScreen} />
-        )}
       </main>
 
       {/* Global Footer */}
       <Footer setCurrentScreen={setCurrentScreen} />
+
+      {/* Global Floating AI Assistant */}
+      <AIAssistantWidget />
 
     </div>
   );
@@ -221,7 +221,9 @@ function MainContent() {
 export default function App() {
   return (
     <LanguageProvider>
-      <MainContent />
+      <AssistantProvider>
+        <MainContent />
+      </AssistantProvider>
     </LanguageProvider>
   );
 }
