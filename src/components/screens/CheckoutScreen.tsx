@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { ScreenType } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
+import { processRazorpayPayment, generateUpiQrUri } from '../../utils/payment';
 
 interface CheckoutScreenProps {
   setCurrentScreen: (screen: ScreenType) => void;
@@ -33,10 +34,27 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
   const handlePay = (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
-    setTimeout(() => {
-      setIsProcessing(false);
-      onPaymentSuccess();
-    }, 2000);
+
+    processRazorpayPayment(
+      {
+        bookingId: `BK-${Date.now()}`,
+        bookingNumber: 'AC-8842-MH15',
+        amount: totalAmount,
+        farmerName: 'शंकर पाटील (Shankar Patil)',
+        farmerPhone: '+919890123456',
+        transporterName: 'जय महाराष्ट्र ट्रान्सपोर्ट (Nashik)',
+        cropType: 'कांदा (Onion)',
+      },
+      (paymentId) => {
+        console.log('Payment success:', paymentId);
+        setIsProcessing(false);
+        onPaymentSuccess();
+      },
+      (err) => {
+        console.warn('Payment failed/dismissed:', err);
+        setIsProcessing(false);
+      }
+    );
   };
 
   return (

@@ -16,6 +16,7 @@ import {
   Users,
   Building2,
   Zap,
+  Sun,
 } from 'lucide-react';
 import { ScreenType } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
@@ -120,6 +121,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ setCurrentScreen }) => {
                 >
                   <TrendingUp className="w-4 h-4 text-emerald-400" />
                   <span>{t('viewMandiPrices')}</span>
+                </button>
+
+                <button
+                  onClick={() => setCurrentScreen('weather')}
+                  className="px-5 py-3.5 rounded-xl bg-amber-950/60 border border-amber-700/60 text-amber-200 font-semibold text-sm hover:bg-amber-900/80 transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                >
+                  <Sun className="w-4 h-4 text-amber-400" />
+                  <span>{t('weatherAdvisor')}</span>
                 </button>
 
                 <button

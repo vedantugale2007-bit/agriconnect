@@ -20,6 +20,7 @@ import { PaymentSuccessScreen } from './components/screens/PaymentSuccessScreen'
 import { LiveTrackingScreen } from './components/screens/LiveTrackingScreen';
 import { InvoicesScreen } from './components/screens/InvoicesScreen';
 import { AIAssistantScreen } from './components/screens/AIAssistantScreen';
+import { WeatherScreen } from './components/screens/WeatherScreen';
 
 function MainContent() {
   const [currentScreen, setCurrentScreen] = useState<ScreenType>('home');
@@ -208,6 +209,10 @@ function MainContent() {
 
         {currentScreen === 'ai-assistant' && (
           <AIAssistantScreen setCurrentScreen={setCurrentScreen} />
+        )}
+
+        {currentScreen === 'weather' && (
+          <WeatherScreen setCurrentScreen={setCurrentScreen} />
         )}
       </main>
 

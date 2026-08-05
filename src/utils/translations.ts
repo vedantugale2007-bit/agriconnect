@@ -53,6 +53,7 @@ const UI_STRINGS: Record<string, Record<Language, string>> = {
   liveTracking: { mr: 'थेट ट्रॅकिंग', hi: 'लाइव ट्रैकिंग', en: 'Live Tracking' },
   invoices: { mr: 'जीएसटी बिले', hi: 'जीएसटी बिल', en: 'Invoices' },
   aiAssistant: { mr: 'कृषी एआय सहाय्यक', hi: 'कृषि एआई सहायक', en: 'Agri AI Assistant' },
+  weatherAdvisor: { mr: 'हवामान अंदाज', hi: 'मौसम पूर्वानुमान', en: 'Weather Advisor' },
   alerts: { mr: 'सूचना व अपडेट्स', hi: 'अधिसूचनाएं एवं अपडेट', en: 'Alerts & Updates' },
   markAllRead: { mr: 'सर्व वाचलेले दाखवा', hi: 'सभी पढ़ा हुआ चिन्हित करें', en: 'Mark all read' },
   switchRole: { mr: 'भूमिका बदला', hi: 'रोल बदलें', en: 'Switch Perspective' },

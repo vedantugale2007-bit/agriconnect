@@ -16,6 +16,7 @@ import {
   LayoutDashboard,
   CheckCircle2,
   Globe,
+  Sun,
 } from 'lucide-react';
 import { ScreenType, UserRole, Language } from '../types';
 import { useLanguage } from '../context/LanguageContext';
@@ -165,6 +166,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <FileText className="w-3.5 h-3.5 text-emerald-400" />
               <span>{t('invoices')}</span>
+            </button>
+
+            <button
+              onClick={() => setCurrentScreen('weather')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                currentScreen === 'weather'
+                  ? 'bg-emerald-800/80 text-emerald-200 border border-emerald-700/50'
+                  : 'text-emerald-100/80 hover:text-white hover:bg-emerald-900/40'
+              }`}
+            >
+              <Sun className="w-3.5 h-3.5 text-amber-400" />
+              <span>{t('weatherAdvisor')}</span>
             </button>
 
             <button
@@ -375,6 +388,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="w-full text-left px-3 py-2 rounded-xl text-sm font-semibold text-emerald-100 hover:bg-emerald-900/60"
           >
             {t('invoices')}
+          </button>
+          <button
+            onClick={() => { setCurrentScreen('weather'); setMobileMenuOpen(false); }}
+            className="w-full text-left px-3 py-2 rounded-xl text-sm font-semibold text-emerald-100 hover:bg-emerald-900/60"
+          >
+            {t('weatherAdvisor')}
           </button>
           <button
             onClick={() => { setCurrentScreen('ai-assistant'); setMobileMenuOpen(false); }}

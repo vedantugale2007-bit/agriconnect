@@ -13,10 +13,15 @@ import {
   RefreshCw,
   ChevronLeft,
   X,
-  Volume2,
+  Share2,
+  Navigation,
+  Compass,
 } from 'lucide-react';
 import { ScreenType, ShipmentBooking } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
+import { GoogleMapComponent } from '../GoogleMapComponent';
+import { getCurrentGpsPosition, generateShareableTrackingUrl, LiveLocationData } from '../../utils/gpsTracking';
+import { sendBrowserNotification, requestNotificationPermission } from '../../utils/notifications';
 
 interface LiveTrackingScreenProps {
   setCurrentScreen: (screen: ScreenType) => void;
@@ -30,6 +35,8 @@ export const LiveTrackingScreen: React.FC<LiveTrackingScreenProps> = ({
   const { language, t, getCropName, getVehicleName } = useLanguage();
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [simulatedBreach, setSimulatedBreach] = useState(false);
+  const [updatingGps, setUpdatingGps] = useState(false);
+  const [liveGps, setLiveGps] = useState<LiveLocationData | null>(null);
 
   const booking = shipment || {
     id: 'ship-1',
@@ -55,6 +62,37 @@ export const LiveTrackingScreen: React.FC<LiveTrackingScreenProps> = ({
     estimatedHours: 1.75,
     temperatureCelsius: simulatedBreach ? 38.5 : 28.2,
     humidityPercent: 55,
+  };
+
+  const handleRefreshGps = async () => {
+    setUpdatingGps(true);
+    try {
+      const pos = await getCurrentGpsPosition();
+      setLiveGps(pos);
+      await requestNotificationPermission();
+      sendBrowserNotification(
+        'GPS स्थान अद्ययावत!',
+        `वाहनाची सद्यस्थिती: ${pos.speedKmH} किमी/तास वेग @ ${pos.lastUpdatedTime}`
+      );
+    } catch (e) {
+      console.warn('GPS update error:', e);
+    } finally {
+      setUpdatingGps(false);
+    }
+  };
+
+  const handleShareTracking = () => {
+    const url = generateShareableTrackingUrl(booking.bookingNumber);
+    if (navigator.share) {
+      navigator.share({
+        title: `AgriConnect Live Track: ${booking.bookingNumber}`,
+        text: `माझ्या कांदा वाहतुकीचे (MH 15 EG 4821) थेट स्थान पाहा:`,
+        url,
+      }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(url);
+      alert(language === 'mr' ? 'थेट ट्रॅकिंग लिंक कॉपी केली आहे!' : 'Tracking link copied to clipboard!');
+    }
   };
 
   return (
@@ -87,6 +125,23 @@ export const LiveTrackingScreen: React.FC<LiveTrackingScreenProps> = ({
 
         <div className="flex items-center space-x-2">
           <button
+            onClick={handleRefreshGps}
+            disabled={updatingGps}
+            className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 hover:bg-slate-800 text-xs font-bold transition-all cursor-pointer flex items-center space-x-1"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 text-emerald-400 ${updatingGps ? 'animate-spin' : ''}`} />
+            <span>{updatingGps ? 'अपडेट होत आहे...' : 'GPS अपडेट करा'}</span>
+          </button>
+
+          <button
+            onClick={handleShareTracking}
+            className="px-3 py-1.5 rounded-xl bg-teal-950 border border-teal-800 text-teal-300 hover:bg-teal-900 text-xs font-bold transition-all cursor-pointer flex items-center space-x-1"
+          >
+            <Share2 className="w-3.5 h-3.5" />
+            <span>{language === 'mr' ? 'शेअर लिंक' : 'Share Link'}</span>
+          </button>
+
+          <button
             onClick={() => setSimulatedBreach(!simulatedBreach)}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
               simulatedBreach
@@ -94,7 +149,7 @@ export const LiveTrackingScreen: React.FC<LiveTrackingScreenProps> = ({
                 : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'
             }`}
           >
-            {simulatedBreach ? 'तापमान इशारा बंद करा' : 'तापमान इशारा चाचणी'}
+            {simulatedBreach ? 'तापमान इशारा बंद' : 'तापमान अलार्म चाचणी'}
           </button>
 
           <a
@@ -130,7 +185,7 @@ export const LiveTrackingScreen: React.FC<LiveTrackingScreenProps> = ({
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left 8 Cols: Live Interactive Route Card */}
+        {/* Left 8 Cols: Google Maps Live Tracking View */}
         <div className="lg:col-span-8 space-y-6">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-5 shadow-2xl relative overflow-hidden">
             <div className="flex justify-between items-center pb-4 border-b border-slate-800">
@@ -148,39 +203,19 @@ export const LiveTrackingScreen: React.FC<LiveTrackingScreenProps> = ({
               </div>
             </div>
 
-            {/* Simulated Live Route Canvas */}
-            <div className="h-64 bg-slate-950 rounded-2xl border border-slate-800 p-6 flex flex-col justify-between relative overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(#052e16_1px,transparent_1px)] [background-size:16px_16px] opacity-40" />
-              
-              <div className="relative z-10 flex justify-between items-center">
-                <div className="p-3 bg-slate-900/90 border border-slate-800 rounded-xl">
-                  <span className="text-[10px] text-slate-400 block font-bold">प्रारंभ</span>
-                  <span className="text-xs font-bold text-emerald-400">{booking.pickupLocation}</span>
-                </div>
-
-                <div className="p-3 bg-slate-900/90 border border-slate-800 rounded-xl text-right">
-                  <span className="text-[10px] text-slate-400 block font-bold">गंतव्य</span>
-                  <span className="text-xs font-bold text-amber-400">{booking.destinationLocation}</span>
-                </div>
-              </div>
-
-              {/* Progress Line */}
-              <div className="relative z-10 space-y-2 my-auto">
-                <div className="flex justify-between text-[11px] text-slate-400 font-bold">
-                  <span>सिन्नर फाटा</span>
-                  <span className="text-emerald-400">निफाड बायपास जवळ (६५%)</span>
-                  <span>लासलगाव नाका</span>
-                </div>
-                <div className="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-amber-400 rounded-full w-[65%]" />
-                </div>
-              </div>
-
-              <div className="relative z-10 flex justify-between items-center text-xs text-slate-400">
-                <span>अंतर पार केले: ४२ किमी / ६५ किमी</span>
-                <span className="text-emerald-400 font-bold">वेग: ५५ किमी/तास</span>
-              </div>
-            </div>
+            {/* Google Map Integration */}
+            <GoogleMapComponent
+              pickupLat={19.845}
+              pickupLng={74.02}
+              destinationLat={20.08}
+              destinationLng={74.52}
+              vehicleLat={liveGps?.lat || 19.92}
+              vehicleLng={liveGps?.lng || 74.25}
+              pickupTitle={booking.pickupLocation}
+              destinationTitle={booking.destinationLocation}
+              vehicleTitle={`${booking.vehicleNumber} (${booking.driverName})`}
+              height="380px"
+            />
           </div>
         </div>
 
@@ -189,7 +224,7 @@ export const LiveTrackingScreen: React.FC<LiveTrackingScreenProps> = ({
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4 shadow-2xl">
             <h3 className="text-sm font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-2">
               <Thermometer className="w-4 h-4 text-emerald-400" />
-              <span>हवामान आणि सेन्सर</span>
+              <span>हवामान आणि IoT सेन्सर</span>
             </h3>
 
             <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-2">
@@ -206,18 +241,18 @@ export const LiveTrackingScreen: React.FC<LiveTrackingScreenProps> = ({
             </div>
 
             <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-2 text-xs">
-              <div className="text-slate-400 font-bold">वाहनाची माहिती:</div>
+              <div className="text-slate-400 font-bold">थेट टेलिमेट्री (Live Telemetry):</div>
               <div className="flex justify-between">
-                <span className="text-slate-500">प्रकार:</span>
-                <span className="text-white font-semibold">{getVehicleName(booking.vehicleType)}</span>
+                <span className="text-slate-500">वाहतूक वेग:</span>
+                <span className="text-emerald-400 font-bold">{liveGps?.speedKmH || 55} किमी/तास</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">क्रमांक:</span>
-                <span className="text-emerald-400 font-bold">{booking.vehicleNumber}</span>
+                <span className="text-slate-500">बाकी अंतर:</span>
+                <span className="text-amber-300 font-bold">२३ किमी बाकी</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">ड्रायव्हर:</span>
-                <span className="text-white font-semibold">{booking.driverName}</span>
+                <span className="text-slate-500">शेवटचा GPS अपडेट:</span>
+                <span className="text-slate-300 font-medium">{liveGps?.lastUpdatedTime || 'आत्ताच (Just now)'}</span>
               </div>
             </div>
 

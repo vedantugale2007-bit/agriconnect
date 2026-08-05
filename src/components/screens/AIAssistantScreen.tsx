@@ -39,16 +39,145 @@ export const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ setCurrent
   const [input, setInput] = useState('');
   const [selectedImageBase64, setSelectedImageBase64] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
 
-  const quickPrompts = language === 'mr' ? [
-    '३८°C तापमानात सिन्नर ते मुंबई १० टन टोमॅटो पिकाचे नुकसान कसे टाळावे?',
-    'पिंपळगाव वरून द्राक्ष निर्यातीसाठी सर्वोत्तम टेम्परेचर काय असावे?',
-    'लासलगाव APMC मध्ये आज कांद्याचे कमाल व किमान बाजारभाव काय आहेत?',
+  const toggleVoiceInput = () => {
+    if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+      alert(language === 'mr' ? 'तुमच्या ब्राऊजरमध्ये व्हॉइस इनपुट उपलब्ध नाही.' : 'Voice recognition not supported in browser.');
+      return;
+    }
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = language === 'mr' ? 'mr-IN' : language === 'hi' ? 'hi-IN' : 'en-US';
+    recognition.continuous = false;
+
+    if (isListening) {
+      recognition.stop();
+      setIsListening(false);
+      return;
+    }
+
+    setIsListening(true);
+    recognition.start();
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setInput(transcript);
+      setIsListening(false);
+    };
+
+    recognition.onerror = () => {
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+  };
+
+  const speakText = (text: string) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = language === 'mr' ? 'mr-IN' : language === 'hi' ? 'hi-IN' : 'en-US';
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const topicCategories = language === 'mr' ? [
+    { id: 'crops', label: '🌾 पीक सल्ला' },
+    { id: 'disease', label: '🔬 रोग व किड निदान' },
+    { id: 'fertilizer', label: '🧪 खत व औषध नियोजन' },
+    { id: 'weather', label: '⛅ हवामान सल्ला' },
+    { id: 'harvest', label: '✂️ काढणीची वेळ' },
+    { id: 'prices', label: '📈 बाजारभाव अंदाज' },
+    { id: 'logistics', label: '🚚 वाहतूक जुळवणी' },
+  ] : language === 'hi' ? [
+    { id: 'crops', label: '🌾 फसल सलाह' },
+    { id: 'disease', label: '🔬 बीमारी पहचान' },
+    { id: 'fertilizer', label: '🧪 उर्वरक सलाह' },
+    { id: 'weather', label: '⛅ मौसम सलाह' },
+    { id: 'harvest', label: '✂️ कटाई समय' },
+    { id: 'prices', label: '📈 मंडी भाव अनुमान' },
+    { id: 'logistics', label: '🚚 परिवहन सलाह' },
   ] : [
-    'Estimate crop loss for 10T Tomatoes from Sinnar to Mumbai in 38°C heat',
-    'What temperature is best for Export Grapes from Pimpalgaon to JNPT Port?',
-    'What are today\'s onion Mandi prices at Lasalgaon APMC?',
+    { id: 'crops', label: '🌾 Crop Advice' },
+    { id: 'disease', label: '🔬 Disease Diagnosis' },
+    { id: 'fertilizer', label: '🧪 Fertilizer Guide' },
+    { id: 'weather', label: '⛅ Weather Advice' },
+    { id: 'harvest', label: '✂️ Harvest Timing' },
+    { id: 'prices', label: '📈 Price Predictions' },
+    { id: 'logistics', label: '🚚 Logistics Recs' },
   ];
+
+  const quickPromptsMap: Record<string, string[]> = {
+    crops: language === 'mr' ? [
+      'नाशिक हवामानात कांदा पिकासाठी कोणत्या जमिनीत लागवड करावी?',
+      'द्राक्ष पिकासाठी ठिबक सिंचन आणि छाटणीची योग्य वेळ कोणती?',
+      'कमी पाण्यात येणारी फायदेशीर फळपिके कोणती आहेत?',
+    ] : [
+      'Which crop varieties are best suited for Nashik soil and monsoon?',
+      'What are the optimal irrigation schedules for export quality grapes?',
+      'Suggest drought-tolerant profitable crops for Ahilyanagar district.',
+    ],
+    disease: language === 'mr' ? [
+      'कांद्यावरील करपा (Purple Blotch) रोगासाठी काय फवारणी करावी?',
+      'द्राक्षावरील दावण्या (Downy Mildew) रोगाची सुरुवातीची लक्षणे कशी ओळखावीत?',
+      'टोमॅटो पिकातील तांबड्या कोळी कीडीवर उपाय सांगा.',
+    ] : [
+      'What organic spray controls Purple Blotch disease in onion crops?',
+      'How to prevent Downy Mildew fungal outbreak in grape vineyards during humidity?',
+      'Symptoms and treatment for Tomato Leaf Curl virus.',
+    ],
+    fertilizer: language === 'mr' ? [
+      'उसाच्या पिकासाठी NPK खतांची मात्रा कशी द्यावी?',
+      'कांद्याचा आकार आणि गुणवत्ता वाढवण्यासाठी कोणत्या सूक्ष्म अन्नद्रव्यांची गरज असते?',
+      'सेंद्रिय खते आणि जिवाणू खतांचा वापर कसा करावा?',
+    ] : [
+      'NPK fertilizer ratio for high-yield onion bulb development.',
+      'Micro-nutrient dosage for pomegranate size and color enhancement.',
+      'Bio-fertilizer application schedule for wheat farming.',
+    ],
+    weather: language === 'mr' ? [
+      'सिन्नर भागात पुढील ४ दिवसांत पावसाची शक्यता आहे का?',
+      'उष्णतेच्या लाटेत टोमॅटो पिकाचे संरक्षण कसे करावे?',
+      'धुके आणि अचानक तापमानातील घसरणीचा द्राक्ष पिकावर काय परिणाम होतो?',
+    ] : [
+      'How to protect tomato crops during heatwaves above 38°C in Nashik?',
+      'Weather forecast and spraying advisory for grape orchards this week.',
+      'Humidity control techniques for cold storage transit during heavy rain.',
+    ],
+    harvest: language === 'mr' ? [
+      'लाल कांदा काढणीसाठी कधी तयार होतो? ओळखण्याच्या खुणा सांगा.',
+      'निर्यातक्षम द्राक्षांची गोडी (TSS sugar) कधी व कशी मोजावी?',
+      'टोमॅटोची तोडणी कोणत्या टप्प्यावर करावी जेणेकरून वाहतुकीत खराब होणार नाही?',
+    ] : [
+      'How to determine maturity indices for red onion harvesting?',
+      'Brix sugar level check for export table grapes harvesting.',
+      'Ideal picking stage for tomatoes intended for long-distance transport to Delhi.',
+    ],
+    prices: language === 'mr' ? [
+      'लासलगाव APMC मध्ये पुढील आठवड्यात कांद्याचे दर कसे राहतील?',
+      'पिंपळगाव बाजारात टोमॅटोच्या आवकनुसार बाजारभावाचा अंदाज सांगा.',
+      'सोलापूर आणि पुणे एपीएमसी मधील डाळिंबाचे सरासरी दर काय आहेत?',
+    ] : [
+      'Lasalgaon APMC onion price trend prediction for next week.',
+      'Demand-supply price forecast for tomatoes at Pimpalgaon Market.',
+      'Pomegranate export pricing trends at Pune and Mumbai APMC.',
+    ],
+    logistics: language === 'mr' ? [
+      '१० टन कांदा नाशिक ते मुंबई वाहून नेण्यासाठी कोणता ट्रक योग्य राहील?',
+      'नाशिक ते दिल्ली द्राक्ष वाहतुकीसाठी रेफ्रिजरेटेड टेम्परेचर काय ठेवावे?',
+      'नाशिक-पुणे महामार्गावर सर्वात कमी भाड्यात गाडी कशी शोधावी?',
+    ] : [
+      'Which truck is most cost-effective for 10 Ton onion transport from Nashik to Mumbai?',
+      'Reefer container setpoint temperature for grape transit to JNPT Port.',
+      'How to optimize transport route from Sinnar to Delhi to cut fuel costs?',
+    ],
+  };
+
+  const [activeTopic, setActiveTopic] = useState<string>('crops');
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -137,12 +266,29 @@ export const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ setCurrent
         </div>
       </div>
 
+      {/* Topic Categories Bar */}
+      <div className="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none">
+        {topicCategories.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => setActiveTopic(cat.id)}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer border ${
+              activeTopic === cat.id
+                ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-lg shadow-emerald-500/20'
+                : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white'
+            }`}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
+
       {/* Quick Prompts Chips */}
       <div className="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-none">
         <span className="text-[10px] uppercase font-bold text-slate-500 shrink-0">
           {language === 'mr' ? 'त्वरित प्रश्न:' : 'Quick Queries:'}
         </span>
-        {quickPrompts.map((qp, idx) => (
+        {(quickPromptsMap[activeTopic] || quickPromptsMap['crops']).map((qp, idx) => (
           <button
             key={idx}
             onClick={() => handleSendMessage(qp)}
@@ -210,7 +356,18 @@ export const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ setCurrent
                   </div>
                 )}
 
-                <div className="text-[9px] text-slate-400 text-right">{m.timestamp}</div>
+                <div className="flex items-center justify-between pt-1 border-t border-slate-800/50">
+                  {m.sender === 'ai' && (
+                    <button
+                      onClick={() => speakText(m.text)}
+                      className="text-emerald-400 hover:text-emerald-300 flex items-center space-x-1 cursor-pointer text-[10px]"
+                    >
+                      <Volume2 className="w-3 h-3" />
+                      <span>{language === 'mr' ? 'ऐका (Listen)' : 'Listen'}</span>
+                    </button>
+                  )}
+                  <div className="text-[9px] text-slate-400 ml-auto">{m.timestamp}</div>
+                </div>
               </div>
             </div>
           ))}
@@ -256,6 +413,19 @@ export const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ setCurrent
               className="hidden"
             />
           </label>
+
+          {/* Voice Input Mic Button */}
+          <button
+            onClick={toggleVoiceInput}
+            className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
+              isListening
+                ? 'bg-rose-500 text-white border-rose-400 animate-pulse'
+                : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-emerald-400'
+            }`}
+            title="Voice Input (मराठी/हिंदी/English)"
+          >
+            <Mic className="w-4 h-4" />
+          </button>
 
           <input
             type="text"

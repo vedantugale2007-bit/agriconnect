@@ -21,9 +21,32 @@ import {
   CloudRain,
   Phone,
   X,
+  BarChart2,
+  PieChart as PieChartIcon,
+  DollarSign,
+  PackageCheck,
+  Activity,
 } from 'lucide-react';
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  Legend,
+  PieChart,
+  Pie,
+  Cell,
+} from 'recharts';
 import { ScreenType, ShipmentBooking, MandiPrice, LossPredictionResult, CargoType, VehicleType } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
+import { REGIONAL_WEATHER } from '../../utils/weather';
 
 interface FarmerDashboardProps {
   setCurrentScreen: (screen: ScreenType) => void;
@@ -69,6 +92,34 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
   const totalBookingsCount = shipments.length + 18;
   const activeLoadsCount = shipments.filter((s) => s.status === 'IN_TRANSIT' || s.status === 'CONFIRMED').length;
   const activeShipment = shipments.find((s) => s.status === 'IN_TRANSIT') || shipments[0];
+
+  // Farmer Analytics Data
+  const [analyticsTab, setAnalyticsTab] = useState<'prices' | 'expenses' | 'shipments' | 'bookings'>('prices');
+
+  const monthlyExpensesData = [
+    { month: language === 'mr' ? 'मार्च' : 'Mar', transport: 12400, insurance: 850, apmcCess: 420 },
+    { month: language === 'mr' ? 'एप्रिल' : 'Apr', transport: 15800, insurance: 1100, apmcCess: 550 },
+    { month: language === 'mr' ? 'मे' : 'May', transport: 19200, insurance: 1400, apmcCess: 680 },
+    { month: language === 'mr' ? 'जून' : 'Jun', transport: 22500, insurance: 1650, apmcCess: 820 },
+    { month: language === 'mr' ? 'जुलै' : 'Jul', transport: 18900, insurance: 1350, apmcCess: 690 },
+    { month: language === 'mr' ? 'ऑगस्ट' : 'Aug', transport: 24800, insurance: 1800, apmcCess: 910 },
+  ];
+
+  const cropShipmentsData = [
+    { crop: language === 'mr' ? 'कांदा' : 'Onion', tons: 48, fill: '#f59e0b' },
+    { crop: language === 'mr' ? 'द्राक्षे' : 'Grapes', tons: 32, fill: '#a855f7' },
+    { crop: language === 'mr' ? 'टोमॅटो' : 'Tomato', tons: 24, fill: '#ef4444' },
+    { crop: language === 'mr' ? 'डाळिंब' : 'Pomegranate', tons: 16, fill: '#ec4899' },
+    { crop: language === 'mr' ? 'सोयाबीन' : 'Soybean', tons: 12, fill: '#10b981' },
+  ];
+
+  const priceTrendData = [
+    { date: '१५ जुलै', onion: 2450, grapes: 7800, tomato: 1850 },
+    { date: '२० जुलै', onion: 2600, grapes: 8200, tomato: 2100 },
+    { date: '२५ जुलै', onion: 2750, grapes: 8500, tomato: 1950 },
+    { date: '३० जुलै', onion: 2900, grapes: 8100, tomato: 2300 },
+    { date: '०४ ऑग', onion: 3100, grapes: 8600, tomato: 2450 },
+  ];
 
   const handleRunAiLossEstimator = async () => {
     setEstimatingLoss(true);
@@ -200,6 +251,237 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
           <div className="text-3xl font-black text-amber-300 font-display">०६ APMC</div>
           <div className="text-[11px] text-amber-400/80 font-medium">{language === 'mr' ? 'लासलगाव, नाशिक, पिंपळगाव' : 'Lasalgaon, Nashik, Pimpalgaon'}</div>
         </div>
+
+      </div>
+
+      {/* Farmer Analytics Dashboard (Active Bookings, Completed Trips, Monthly Expenses, Crop Shipments, Market Price Charts) */}
+      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-6 shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <div className="flex items-center space-x-2">
+              <span className="p-2 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                <BarChart2 className="w-5 h-5" />
+              </span>
+              <h2 className="text-xl font-extrabold text-white font-display">
+                {language === 'mr' ? 'शेतकरी विश्लेषण व आकडेवारी' : 'Farmer Analytics Dashboard'}
+              </h2>
+            </div>
+            <p className="text-xs text-slate-400 mt-1">
+              {language === 'mr' ? 'खर्च, पिकांची वाहतूक आणि बाजारभाव विश्लेषण' : 'Track Active Bookings, Expenses, Crop Shipments & Market Trends'}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-1.5 bg-slate-950 p-1.5 rounded-2xl border border-slate-800">
+            <button
+              onClick={() => setAnalyticsTab('prices')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 cursor-pointer ${
+                analyticsTab === 'prices' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <TrendingUp className="w-3.5 h-3.5" />
+              <span>{language === 'mr' ? 'बाजारभाव' : 'Price Charts'}</span>
+            </button>
+
+            <button
+              onClick={() => setAnalyticsTab('expenses')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 cursor-pointer ${
+                analyticsTab === 'expenses' ? 'bg-emerald-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <DollarSign className="w-3.5 h-3.5" />
+              <span>{language === 'mr' ? 'महिनानिहाय खर्च' : 'Monthly Expenses'}</span>
+            </button>
+
+            <button
+              onClick={() => setAnalyticsTab('shipments')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 cursor-pointer ${
+                analyticsTab === 'shipments' ? 'bg-teal-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <PieChartIcon className="w-3.5 h-3.5" />
+              <span>{language === 'mr' ? 'पीक वाहतूक' : 'Crop Shipments'}</span>
+            </button>
+
+            <button
+              onClick={() => setAnalyticsTab('bookings')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 cursor-pointer ${
+                analyticsTab === 'bookings' ? 'bg-indigo-500 text-white shadow-md' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <PackageCheck className="w-3.5 h-3.5" />
+              <span>{language === 'mr' ? 'बुकिंग व फेऱ्या' : 'Trips & Bookings'}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Tab Content 1: Market Price Charts */}
+        {analyticsTab === 'prices' && (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center text-xs">
+              <span className="text-slate-400 font-semibold">
+                {language === 'mr' ? 'लासलगाव, पिंपळगाव आणि नाशिक APMC दर (₹ / क्विंटल)' : 'APMC Mandi Price Trends (₹ / Quintal)'}
+              </span>
+              <span className="text-emerald-400 font-bold bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800">
+                {language === 'mr' ? 'कांदा: +१२% तेजी' : 'Onion: +12% Surge'}
+              </span>
+            </div>
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={priceTrendData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} />
+                  <YAxis stroke="#94a3b8" fontSize={11} domain={['auto', 'auto']} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', color: '#fff' }}
+                    itemStyle={{ fontSize: '12px' }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }} />
+                  <Line type="monotone" dataKey="onion" name={language === 'mr' ? 'कांदा (Lasalgaon)' : 'Onion'} stroke="#f59e0b" strokeWidth={3} dot={{ r: 4 }} />
+                  <Line type="monotone" dataKey="grapes" name={language === 'mr' ? 'द्राक्षे (Pimpalgaon)' : 'Grapes'} stroke="#a855f7" strokeWidth={3} dot={{ r: 4 }} />
+                  <Line type="monotone" dataKey="tomato" name={language === 'mr' ? 'टोमॅटो (Nashik)' : 'Tomato'} stroke="#ef4444" strokeWidth={3} dot={{ r: 4 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
+
+        {/* Tab Content 2: Monthly Expenses */}
+        {analyticsTab === 'expenses' && (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center text-xs">
+              <span className="text-slate-400 font-semibold">
+                {language === 'mr' ? 'महिनानिहाय वाहतूक, विमा आणि APMC कर (₹)' : 'Monthly Transport, Insurance & APMC Fees Breakdown (₹)'}
+              </span>
+              <span className="text-teal-300 font-bold text-sm">
+                {language === 'mr' ? 'एकूण खर्च (ऑगस्ट): ₹ २७,५१०' : 'Total Expense (Aug): ₹ 27,510'}
+              </span>
+            </div>
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={monthlyExpensesData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis dataKey="month" stroke="#94a3b8" fontSize={11} />
+                  <YAxis stroke="#94a3b8" fontSize={11} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', color: '#fff' }}
+                    itemStyle={{ fontSize: '12px' }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }} />
+                  <Bar dataKey="transport" name={language === 'mr' ? 'वाहतूक भाडे' : 'Freight Fee'} fill="#10b981" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="insurance" name={language === 'mr' ? 'पीक सुरक्षा विमा' : 'Cargo Insurance'} fill="#06b6d4" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="apmcCess" name={language === 'mr' ? 'APMC कर व टोल' : 'APMC Cess & Toll'} fill="#f59e0b" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
+
+        {/* Tab Content 3: Crop Shipments */}
+        {analyticsTab === 'shipments' && (
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+            <div className="md:col-span-6 h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={cropShipmentsData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={55}
+                    outerRadius={85}
+                    paddingAngle={4}
+                    dataKey="tons"
+                  >
+                    {cropShipmentsData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', color: '#fff' }}
+                    itemStyle={{ fontSize: '12px' }}
+                    formatter={(val: any) => [`${val} मे. टन (Tons)`, 'प्रमाण']}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="md:col-span-6 space-y-3">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                {language === 'mr' ? 'पिकानुसार पाठवलेले एकूण प्रमाण (एकूण १३२ मे. टन)' : 'Crop Shipment Share (Total 132 Metric Tons)'}
+              </h4>
+              {cropShipmentsData.map((item, idx) => (
+                <div key={idx} className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                  <div className="flex justify-between text-xs font-bold text-white">
+                    <span className="flex items-center space-x-2">
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.fill }} />
+                      <span>{item.crop}</span>
+                    </span>
+                    <span>{item.tons} टन ({Math.round((item.tons / 132) * 100)}%)</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                    <div className="h-full rounded-full" style={{ width: `${(item.tons / 48) * 100}%`, backgroundColor: item.fill }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Tab Content 4: Active Bookings & Completed Trips */}
+        {analyticsTab === 'bookings' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+              <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+                <span className="text-xs font-bold text-emerald-400 flex items-center space-x-1.5">
+                  <Truck className="w-4 h-4" />
+                  <span>{language === 'mr' ? 'सक्रिय बुकिंग (Active Bookings)' : 'Active Bookings Status'}</span>
+                </span>
+                <span className="text-xs font-extrabold text-white bg-emerald-950 px-2.5 py-0.5 rounded-full border border-emerald-800">
+                  {activeLoadsCount} {language === 'mr' ? 'गाड्या मार्गावर' : 'Active'}
+                </span>
+              </div>
+              <div className="space-y-2 text-xs text-slate-300">
+                <div className="flex justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
+                  <span>१. सिन्नर → लासलगाव (कांदा १० टन)</span>
+                  <span className="text-emerald-400 font-bold">{t('inTransit')}</span>
+                </div>
+                <div className="flex justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
+                  <span>२. निफाड → वाशी APMC (द्राक्षे १५ टन)</span>
+                  <span className="text-teal-400 font-bold">{language === 'mr' ? 'गाडी लोडिंग सुरू' : 'Loading'}</span>
+                </div>
+                <div className="flex justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
+                  <span>३. पिंपळगाव → पुणे APMC (टोमॅटो ८ टन)</span>
+                  <span className="text-amber-400 font-bold">{language === 'mr' ? 'उद्या सकाळी ०६:००' : 'Scheduled'}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+              <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+                <span className="text-xs font-bold text-indigo-400 flex items-center space-x-1.5">
+                  <PackageCheck className="w-4 h-4" />
+                  <span>{language === 'mr' ? 'पूर्ण झालेल्या फेऱ्या (Completed Trips)' : 'Completed Trips History'}</span>
+                </span>
+                <span className="text-xs font-extrabold text-white bg-indigo-950 px-2.5 py-0.5 rounded-full border border-indigo-800">
+                  १८ {language === 'mr' ? 'फेऱ्या यशस्वी' : 'Trips Completed'}
+                </span>
+              </div>
+              <div className="space-y-2 text-xs text-slate-300">
+                <div className="flex justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
+                  <span>वेळेवर वितरण (On-Time Delivery):</span>
+                  <span className="text-emerald-400 font-bold">९९.४%</span>
+                </div>
+                <div className="flex justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
+                  <span>पीक हानी विरहित फेऱ्या (Zero Spoilage):</span>
+                  <span className="text-teal-400 font-bold">१००%</span>
+                </div>
+                <div className="flex justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
+                  <span>एकूण प्रवास अंतर (Distance Covered):</span>
+                  <span className="text-amber-400 font-bold">२,८४० किमी</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
       </div>
 
@@ -342,8 +624,42 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
 
         </div>
 
-        {/* Right 4 Cols: AI Crop Loss Estimator Widget */}
+        {/* Right 4 Cols: AI Crop Loss Estimator Widget & Weather Advisory */}
         <div className="lg:col-span-4 space-y-6">
+          
+          {/* Regional Weather Widget */}
+          {(() => {
+            const weather = REGIONAL_WEATHER['Nashik'];
+            return (
+              <div className="bg-slate-900 border border-slate-800 hover:border-amber-500/50 rounded-3xl p-5 space-y-3 shadow-xl transition-all">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Sun className="w-5 h-5 text-amber-400 animate-spin-slow" />
+                    <div>
+                      <h4 className="text-xs font-bold text-white">नाशिक-सिन्नर हवामान (Weather)</h4>
+                      <p className="text-[10px] text-slate-400">{weather.conditionMr}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-lg font-black text-amber-300">{weather.tempCelsius}°C</div>
+                    <div className="text-[9px] text-slate-400">आर्द्रता: {weather.humidityPercent}%</div>
+                  </div>
+                </div>
+
+                <div className="p-2.5 rounded-xl bg-amber-950/40 border border-amber-800/50 text-[11px] text-amber-200">
+                  <span className="font-bold">वाहतूक सल्ला: </span>
+                  {weather.agriculturalAdviceMr}
+                </div>
+
+                <button
+                  onClick={() => setCurrentScreen('weather')}
+                  className="w-full py-2 bg-slate-950 hover:bg-slate-800 border border-slate-800 text-amber-300 font-bold text-xs rounded-xl flex items-center justify-center space-x-1 transition-all cursor-pointer"
+                >
+                  <span>सविस्तर हवामान अंदाज पहा (Weather Advisor)</span>
+                </button>
+              </div>
+            );
+          })()}
           
           <div className="bg-slate-900 border border-emerald-800/80 rounded-3xl p-6 space-y-5 shadow-2xl relative">
             <div className="flex items-center space-x-3 pb-3 border-b border-slate-800">

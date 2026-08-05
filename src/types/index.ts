@@ -10,7 +10,8 @@ export type ScreenType =
   | 'live-tracking'
   | 'invoices'
   | 'transactions'
-  | 'ai-assistant';
+  | 'ai-assistant'
+  | 'weather';
 
 export type UserRole = 'farmer' | 'transporter' | 'admin';
 

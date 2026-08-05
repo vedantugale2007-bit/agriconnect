@@ -12,9 +12,13 @@ import {
   Leaf,
   SlidersHorizontal,
   ChevronRight,
+  Sparkles,
+  AlertTriangle,
 } from 'lucide-react';
-import { ScreenType, Transporter, ShipmentBooking, VehicleType } from '../../types';
+import { ScreenType, Transporter, ShipmentBooking, VehicleType, CargoType } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
+import { matchTransportersForLoad } from '../../utils/aiMatching';
+import { analyzeLoadCapacity } from '../../utils/loadPlanner';
 
 interface FindTransportersScreenProps {
   setCurrentScreen: (screen: ScreenType) => void;
@@ -32,12 +36,19 @@ export const FindTransportersScreen: React.FC<FindTransportersScreenProps> = ({
   const [minRating, setMinRating] = useState<number>(4.5);
   const [pickupInput, setPickupInput] = useState('सिन्नर शेत गट क्र. ३, नाशिक');
   const [destInput, setDestInput] = useState('लासलगाव APMC बाजार समिती');
+  const [cropType, setCropType] = useState<CargoType>('Onion');
+  const [weightKg, setWeightKg] = useState<number>(10000);
 
-  const filteredTransporters = transporters.filter((t) => {
-    if (selectedVehicleFilter !== 'ALL' && !t.vehicleType.toLowerCase().includes(selectedVehicleFilter.toLowerCase())) {
+  // AI Matching calculations
+  const matchedList = matchTransportersForLoad(cropType, weightKg, transporters, 65);
+  const loadAnalysis = analyzeLoadCapacity('Eicher 14 ft', weightKg);
+
+  const filteredTransporters = matchedList.filter((m) => {
+    const tr = m.transporter;
+    if (selectedVehicleFilter !== 'ALL' && !tr.vehicleType.toLowerCase().includes(selectedVehicleFilter.toLowerCase())) {
       return false;
     }
-    if (t.rating < minRating) return false;
+    if (tr.rating < minRating) return false;
     return true;
   });
 
@@ -195,79 +206,93 @@ export const FindTransportersScreen: React.FC<FindTransportersScreenProps> = ({
           </div>
 
           <div className="space-y-4">
-            {filteredTransporters.map((t) => (
-              <div
-                key={t.id}
-                className="bg-slate-900 border border-slate-800 hover:border-emerald-700/60 p-6 rounded-3xl space-y-4 transition-all shadow-xl group"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  
-                  {/* Left Transporter Info */}
-                  <div className="flex items-start space-x-4">
-                    <img
-                      src={t.avatar}
-                      alt={t.name}
-                      className="w-14 h-14 rounded-2xl object-cover border border-slate-700"
-                    />
-                    <div>
-                      <div className="flex items-center space-x-2">
-                        <h3 className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors">
-                          {t.name}
-                        </h3>
-                        {t.verified && (
-                          <span className="p-1 rounded-full bg-emerald-500/20 text-emerald-400" title="Verified Carrier">
-                            <ShieldCheck className="w-3.5 h-3.5" />
+            {filteredTransporters.map((m) => {
+              const t = m.transporter;
+              return (
+                <div
+                  key={t.id}
+                  className="bg-slate-900 border border-slate-800 hover:border-emerald-700/60 p-6 rounded-3xl space-y-4 transition-all shadow-xl group"
+                >
+                  {/* Top Match Bar */}
+                  <div className="flex items-center justify-between bg-slate-950 p-2.5 rounded-2xl border border-slate-800 text-xs">
+                    <span className="flex items-center space-x-1.5 font-bold text-emerald-400">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>AI मॅच स्कोअर: {m.matchScore}% ({m.matchReason})</span>
+                    </span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-500/20 text-emerald-300 uppercase">
+                      {m.badge}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    
+                    {/* Left Transporter Info */}
+                    <div className="flex items-start space-x-4">
+                      <img
+                        src={t.avatar}
+                        alt={t.name}
+                        className="w-14 h-14 rounded-2xl object-cover border border-slate-700"
+                      />
+                      <div>
+                        <div className="flex items-center space-x-2">
+                          <h3 className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors">
+                            {t.name}
+                          </h3>
+                          {t.verified && (
+                            <span className="p-1 rounded-full bg-emerald-500/20 text-emerald-400" title="Verified Carrier">
+                              <ShieldCheck className="w-3.5 h-3.5" />
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="flex items-center space-x-3 text-xs text-slate-400 mt-1">
+                          <span className="flex items-center space-x-1 text-amber-400 font-bold">
+                            <Star className="w-3.5 h-3.5 fill-amber-400" />
+                            <span>{t.rating} ({t.reviewsCount} पुनरावलोकने)</span>
                           </span>
-                        )}
-                      </div>
+                          <span>•</span>
+                          <span className="text-teal-300 font-semibold">{t.completedTrips} फेऱ्या</span>
+                          <span>•</span>
+                          <span className="text-slate-300">{t.location}</span>
+                        </div>
 
-                      <div className="flex items-center space-x-3 text-xs text-slate-400 mt-1">
-                        <span className="flex items-center space-x-1 text-amber-400 font-bold">
-                          <Star className="w-3.5 h-3.5 fill-amber-400" />
-                          <span>{t.rating} ({t.reviewsCount} पुनरावलोकने)</span>
-                        </span>
-                        <span>•</span>
-                        <span className="text-teal-300 font-semibold">{t.completedTrips} फेऱ्या</span>
-                        <span>•</span>
-                        <span className="text-slate-300">{t.location}</span>
-                      </div>
-
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-950 text-slate-300 border border-slate-800">
-                          {getVehicleName(t.vehicleType)}
-                        </span>
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800/80 flex items-center space-x-1">
-                          <Leaf className="w-3 h-3 text-emerald-400" />
-                          <span>{t.ecoScore}</span>
-                        </span>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-950 text-slate-300 border border-slate-800">
+                            {getVehicleName(t.vehicleType)}
+                          </span>
+                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800/80 flex items-center space-x-1">
+                            <Leaf className="w-3 h-3 text-emerald-400" />
+                            <span>{t.ecoScore}</span>
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Right Pricing & Action */}
-                  <div className="text-right space-y-2 shrink-0">
-                    <div>
-                      <div className="text-xl font-black text-emerald-400 font-display">
-                        ₹ {Math.round(t.ratePerTonMile * 65 * 10 / 10).toLocaleString('en-IN')}
+                    {/* Right Pricing & Action */}
+                    <div className="text-right space-y-2 shrink-0">
+                      <div>
+                        <div className="text-xl font-black text-emerald-400 font-display">
+                          ₹ {m.estimatedCost.toLocaleString('en-IN')}
+                        </div>
+                        <div className="text-[10px] text-slate-400">{language === 'mr' ? 'अंदाजित भाडे दर (६५ किमी)' : 'Est. Fare for 65 Km'}</div>
                       </div>
-                      <div className="text-[10px] text-slate-400">{language === 'mr' ? 'अंदाजित भाडे दर (१० टन)' : 'Est. Rate for 10 Tons'}</div>
+
+                      <button
+                        onClick={() => {
+                          onSelectTransporterForBooking(t);
+                          setCurrentScreen('booking-review');
+                        }}
+                        className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 text-xs font-extrabold hover:from-emerald-400 hover:to-teal-300 transition-all cursor-pointer shadow-md flex items-center justify-center space-x-1.5 w-full sm:w-auto"
+                      >
+                        <span>{language === 'mr' ? 'गाडी निवडा' : 'Select Transporter'}</span>
+                        <ChevronRight className="w-4 h-4 stroke-[3]" />
+                      </button>
                     </div>
 
-                    <button
-                      onClick={() => {
-                        onSelectTransporterForBooking(t);
-                        setCurrentScreen('booking-review');
-                      }}
-                      className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 text-xs font-extrabold hover:from-emerald-400 hover:to-teal-300 transition-all cursor-pointer shadow-md flex items-center justify-center space-x-1.5 w-full sm:w-auto"
-                    >
-                      <span>{language === 'mr' ? 'गाडी निवडा' : 'Select Transporter'}</span>
-                      <ChevronRight className="w-4 h-4 stroke-[3]" />
-                    </button>
                   </div>
-
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
         </div>
